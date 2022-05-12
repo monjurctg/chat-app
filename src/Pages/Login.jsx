@@ -52,8 +52,10 @@ const Login = () => {
            })
    
            if(res.status ==200){
-            //    localStorage.setItem("chat-app-user",JSON.stringify(res.data?.user))
-            if(res.data?.user?.avatarImage==""){
+               localStorage.setItem("chat-app-user",JSON.stringify(res.data?.user))
+               console.log(res.data?.user?.isAvatarImage,"res.data?.user?.isAvatarImage")
+            if(!res.data?.user?.isAvatarImage){
+
                 neviagate("/setAvatar")
 
             }

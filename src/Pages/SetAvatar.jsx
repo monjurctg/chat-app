@@ -7,10 +7,14 @@ import axios from "axios";
 import { setAvatarroute } from "../utils/ApiRoutes";
 import { useNavigate } from "react-router-dom";
 import { Buffer } from "buffer";
+import { useMemo } from "react";
+let  loader = "https://jimphicdesigns.com/downloads/imgs-mockup/colorful-circles-swing-loader.gif"
 
 const SetAvatar = () => {
   const api = "https://api.multiavatar.com/45678945";
   const navigate = useNavigate();
+  var user = JSON.parse(localStorage.getItem('chat-app-user'))
+
 
   const [avatars, setAvatars] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -24,14 +28,27 @@ const SetAvatar = () => {
     theme: "dark",
   };
 
+  console.log(user,"data data")
   const setProfilePicture = async () => {
-  
-    console.log(selectedAvatar,"selectedAvatar")
-      if(selectedAvatar==undefined){
+    
+    if (selectedAvatar == undefined) {
+      toast.error("please select an avatar", toastifyOptions);
+    }
+    else{
+    
+      const user = await JSON.parse(localStorage.getItem('chat-app-user'))
+    
+     
+      const {data}= await axios.post(`${setAvatarroute}/${user._id}`,{image:avatars[selectedAvatar]})
 
-          toast.error("please select an avatar",toastifyOptions)
+    
+      if(data.isSet){
+        user.isAvatarImage = true;
+        user.avatarImage = data.image
+        localStorage.setItem("chat-app-user",JSON.stringify(user))
+        navigate('/')
       }
-
+    }
   };
 
   useEffect(() => {
@@ -42,7 +59,7 @@ const SetAvatar = () => {
         const image = await axios.get(
           `${api}/${Math.round(Math.random() * 1000)}`
         );
-        console.log(image, "image");
+
         if (image.status === 200) {
           const buffer = new Buffer(image.data);
           data.push(buffer.toString("base64"));
@@ -53,33 +70,52 @@ const SetAvatar = () => {
     }
 
     fetchAvatar();
+
+    if(!localStorage.getItem("chat-app-user")){
+      navigate("/login")
+      
+    }
+
   }, []);
-  console.log(avatars, "data");
+
   return (
     <>
-      <Container>
-        <div className="title-container">
-          <h1>Pick an avater as your profile picture</h1>
-        </div>
-        <div className="avatars">
-          {avatars.map((avatar, index) => {
-            return (
-              <div
-                className={`avater ${
-                  selectedAvatar === index ? "selected" : ""
-                }`}
-              >
-                <img
-                  src={`data:image/svg+xml;base64,${avatar}`}
-                  alt="avater"
-                  onClick={() => setSelectedAvatar(index)}
-                />
-              </div>
-            );
-          })}
-        </div>
-        <button className="sumbit-btn" onClick={setProfilePicture}>set as profile picture</button>
-      </Container>
+      {isLoading ? (
+        <Container>
+          <div className="loader">
+          <img src={loader}  alt="" />
+
+          </div>
+       
+        </Container>
+      ) : (
+        <Container>
+          <div className="title-container">
+            <h1>Pick an avater as your profile picture</h1>
+          </div>
+          <div className="avatars">
+            {avatars.map((avatar, index) => {
+              return (
+                <div
+                  className={`avater ${
+                    selectedAvatar === index ? "selected" : ""
+                  }`}
+                >
+                  <img
+                    src={`data:image/svg+xml;base64,${avatar}`}
+                    alt="avater"
+                    onClick={() => setSelectedAvatar(index)}
+                  />
+                </div>
+              );
+            })}
+          </div>
+          <button className="sumbit-btn" onClick={setProfilePicture}>
+            set as profile picture
+          </button>
+        </Container>
+      )}
+
       <ToastContainer />
     </>
   );
@@ -106,7 +142,7 @@ const Container = styled.div`
     .avatar {
       border: 0.4rem solid transparent;
       padding: 0.4rem;
-      border-radius:5rem;
+      border-radius: 5rem;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -116,12 +152,12 @@ const Container = styled.div`
       height: 6rem;
     }
 
-     .selected {
-    border: 0.4rem solid #430eff;
-    border-radius: 5rem;
+    .selected {
+      border: 0.4rem solid #430eff;
+      border-radius: 5rem;
+    }
   }
-  }
- 
+
   button {
     background-color: #997af0;
     color: white;
@@ -135,7 +171,15 @@ const Container = styled.div`
     &:hover {
       background-color: #4e0eff;
     }
+ 
   }
+  .loader{
+     img{
+       width: 150px;
+       border-radius: 50%;
+     }
+
+    }
 `;
 
 export default SetAvatar;
