@@ -1,10 +1,10 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState} from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components'
 import {ToastContainer,toast} from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import axios from 'axios';
-import { LoginRoute, registerRoute } from '../utils/ApiRoutes';
+import { LoginRoute, } from '../utils/ApiRoutes';
 import { useNavigate } from 'react-router-dom';
 let logo = 'https://cdn.dribbble.com/users/573008/screenshots/15453335/media/461c9464866c55c4b0ef892ff8558b0e.png?compress=1&resize=400x300'
 const Login = () => {
@@ -53,7 +53,7 @@ const Login = () => {
    
            if(res.status ==200){
                localStorage.setItem("chat-app-user",JSON.stringify(res.data?.user))
-               console.log(res.data?.user?.isAvatarImage,"res.data?.user?.isAvatarImage")
+            //    console.log(res.data?.user?.isAvatarImage,"res.data?.user?.isAvatarImage")
             if(!res.data?.user?.isAvatarImage){
 
                 neviagate("/setAvatar")

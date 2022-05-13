@@ -28,7 +28,7 @@ const SetAvatar = () => {
     theme: "dark",
   };
 
-  console.log(user,"data data")
+  // console.log(user,"data data")
   const setProfilePicture = async () => {
     
     if (selectedAvatar == undefined) {
