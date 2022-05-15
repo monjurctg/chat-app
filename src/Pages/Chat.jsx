@@ -7,10 +7,13 @@ import styled from "styled-components";
 import ChatContainer from "../Componets/ChatContainer";
 import Contacts from "../Componets/Contacts";
 import Wellcome from "../Componets/Wellcome";
+import {io} from  'socket.io-client'
 
-import { allUserRoute } from "../utils/ApiRoutes";
+import { allUserRoute, host } from "../utils/ApiRoutes";
+import { useRef } from "react";
 
 const Chat = () => {
+  const socket = useRef()
   const [contacts, setContacts] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
@@ -37,6 +40,17 @@ const Chat = () => {
       }
     }
   }
+
+useEffect(()=>{
+  if(currentUser){
+    socket.current = io(host)
+    socket.current.emit('add-user',currentUser._id)
+
+  }
+
+},[currentUser])
+
+
   useEffect(() => {
     allUser();
   }, [currentUser]);
@@ -57,8 +71,13 @@ const Chat = () => {
           {!currentChat ? (
             <Wellcome currentUser={currentUser} />
           ) : (
-            <ChatContainer currentUser={currentUser} />
+            <ChatContainer currentChat={currentChat}  currentUser={currentUser} socket={socket} />
           )}
+        </div>
+
+        <div className="chat-messages"></div>
+        <div className="chat-input">
+          
         </div>
       </Container>
     </>

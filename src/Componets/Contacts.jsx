@@ -33,7 +33,7 @@ const Contacts = ({ contacts, currentUser, changeChat }) => {
           <div className="contacts">
             {contacts.map((contact, index) => {
               return (
-                <>
+           
                   <div
                     key={index}
                     onClick={() => changeCurrentChat(index, contact)}
@@ -51,7 +51,7 @@ const Contacts = ({ contacts, currentUser, changeChat }) => {
                       <h3>{contact.username}</h3>
                     </div>
                   </div>
-                </>
+               
               );
             })}
           </div>

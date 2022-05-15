@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import Logout from './Logout';
 
 let logo = 'https://media1.giphy.com/media/S60CrN9iMxFlyp7uM8/giphy.gif'
 const Wellcome = ({currentUser}) => {
@@ -8,6 +9,11 @@ const Wellcome = ({currentUser}) => {
             <img src={logo} alt="" className='logo' />
             <h1>Wellcome  <span>{currentUser?.username}</span></h1>
             <h3>Please select a chat to start messaging..</h3>
+            <div className="logout">
+            <Logout/>
+
+            </div>
+       
         </Container>
     );
 };
@@ -32,6 +38,11 @@ h1{
 }
 h3{
     color: white;
+}
+.logout{
+    position: absolute;
+    top: 50px;
+    right: 110px;
 }
 
     
