@@ -9,7 +9,7 @@ import Contacts from "../Componets/Contacts";
 import Wellcome from "../Componets/Wellcome";
 import {io} from  'socket.io-client'
 
-import { allUserRoute, host } from "../utils/ApiRoutes";
+import { allUserRoute, friendRoutes, host } from "../utils/ApiRoutes";
 import { useRef } from "react";
 
 const Chat = () => {
@@ -28,10 +28,15 @@ const Chat = () => {
   async function allUser() {
     if (currentUser) {
       if (currentUser.isAvatarImage) {
-        const res = await axios.get(`${allUserRoute}/${currentUser._id}`);
-        // console.log(res.data.users,"current user")
+        const res = await axios.get(`${friendRoutes}/${currentUser._id}`);
+        console.log(`${friendRoutes}/${currentUser._id}`)
+        console.log(res.data,"current user")
+        if(res.data.length>0){
+          const friends = res?.data.filter(friend=>friend.friendsStatus==3)
+          
+        setContacts(friends)
+        }
 
-        setContacts(res.data?.users);
       } else {
         let confirm = window.confirm(
           "Are You Want Set your  profile picture ?"
@@ -44,6 +49,7 @@ const Chat = () => {
 useEffect(()=>{
   if(currentUser){
     socket.current = io(host)
+    // console.log(socket.current,"current socket")
     socket.current.emit('add-user',currentUser._id)
 
   }

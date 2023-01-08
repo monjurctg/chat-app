@@ -3,6 +3,7 @@ import React from "react";
 import { useRef } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { getMessageRoute, sendMessageRoute } from "../utils/ApiRoutes";
 import ChatInput from "./ChatInput";
@@ -46,6 +47,7 @@ const ChatContainer = ({ currentChat, currentUser,socket }) => {
 useEffect(()=>{
   if(socket.current){
     socket.current.on('msg-recive',(msg)=>{
+      console.log("msg-receive",msg)
       setArraivalMessage({fromSlf:false,message:msg})
   
     })
@@ -76,8 +78,15 @@ useEffect(()=>{
 
           <div className="username">
             <h3>{currentChat?.username}</h3>
+           
           </div>
+        
         </div>
+        <div style={{display:"flex",justifyContent:"center",alignContent:"center",gap:'4px',color:"white",alignSelf:"center"}}>
+        <Link to='/video' style={{marginLeft:'30px',cursor:"pointer",backgroundColor:"#9a86f3",padding:'10px',borderRadius:'10px'}}><i class="fa-solid fa-phone" style={{fontSize:"20px",color:"white"}}></i></Link>
+            <button style={{marginLeft:'30px',cursor:"pointer",backgroundColor:"#9a86f3",padding:'10px',borderRadius:'10px'}}><i class="fa-solid fa-video" style={{fontSize:"20px",color:"white"}}></i></button>
+          </div>
+       
         <Logout />
       </div>
       <div className="chat-messages">
