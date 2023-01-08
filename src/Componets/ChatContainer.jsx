@@ -1,18 +1,18 @@
 import axios from "axios";
 import React from "react";
-import { useRef } from "react";
-import { useState } from "react";
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import {useRef} from "react";
+import {useState} from "react";
+import {useEffect} from "react";
+import {Link} from "react-router-dom";
 import styled from "styled-components";
-import { getMessageRoute, sendMessageRoute } from "../utils/ApiRoutes";
+import {getMessageRoute, sendMessageRoute} from "../utils/ApiRoutes";
 import ChatInput from "./ChatInput";
 import Logout from "./Logout";
 import Messages from "./Messages";
-const ChatContainer = ({ currentChat, currentUser,socket }) => {
+const ChatContainer = ({currentChat, currentUser, socket}) => {
   const [messages, setMessages] = useState([]);
-  const [arrivalMessage,setArraivalMessage]= useState(null)
-  const scrollRef =  useRef()
+  const [arrivalMessage, setArraivalMessage] = useState(null);
+  const scrollRef = useRef();
 
   const getMessages = async () => {
     const res = await axios.post(getMessageRoute, {
@@ -32,38 +32,34 @@ const ChatContainer = ({ currentChat, currentUser,socket }) => {
       to: currentChat._id,
       message: msg,
     });
-    socket.current.emit('send-msg',{
-      to:currentChat._id,
-      from:currentUser._id,
-      msg:msg
+
+    socket.current.emit("send-msg", {
+      to: currentChat._id,
+      from: currentUser._id,
+      message: msg,
     });
     const msgs = [...messages];
-    msgs.push({fromSelf:true,message:msg});
-    setMessages(msgs)
-
+    msgs.push({fromSelf: true, message: msg});
+    setMessages(msgs);
   };
   console.log(messages, "messages");
 
-useEffect(()=>{
-  if(socket.current){
-    socket.current.on('msg-recive',(msg)=>{
-      console.log("msg-receive",msg)
-      setArraivalMessage({fromSlf:false,message:msg})
-  
-    })
-  }
+  useEffect(() => {
+    if (socket.current) {
+      socket.current.on("msg-recive", (msg) => {
+        console.log("msg-receive", msg);
+        setArraivalMessage({fromSlf: false, message: msg});
+      });
+    }
+  }, []);
 
-},[])
+  useEffect(() => {
+    arrivalMessage && setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage]);
 
-useEffect(()=>{
-  arrivalMessage && setMessages((prev)=>[...prev,arrivalMessage])
-
-},[arrivalMessage])
-
-useEffect(()=>{
-  scrollRef.current?.scrollIntoView({behaviour:"smooth"})
-
-}, [messages])
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({behaviour: "smooth"});
+  }, [messages]);
 
   return (
     <Container>
@@ -78,15 +74,44 @@ useEffect(()=>{
 
           <div className="username">
             <h3>{currentChat?.username}</h3>
-           
           </div>
-        
         </div>
-        <div style={{display:"flex",justifyContent:"center",alignContent:"center",gap:'4px',color:"white",alignSelf:"center"}}>
-        <Link to='/video' style={{marginLeft:'30px',cursor:"pointer",backgroundColor:"#9a86f3",padding:'10px',borderRadius:'10px'}}><i class="fa-solid fa-phone" style={{fontSize:"20px",color:"white"}}></i></Link>
-            <button style={{marginLeft:'30px',cursor:"pointer",backgroundColor:"#9a86f3",padding:'10px',borderRadius:'10px'}}><i class="fa-solid fa-video" style={{fontSize:"20px",color:"white"}}></i></button>
-          </div>
-       
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignContent: "center",
+            gap: "4px",
+            color: "white",
+            alignSelf: "center",
+          }}>
+          <Link
+            to="/video"
+            style={{
+              marginLeft: "30px",
+              cursor: "pointer",
+              backgroundColor: "#9a86f3",
+              padding: "10px",
+              borderRadius: "10px",
+            }}>
+            <i
+              class="fa-solid fa-phone"
+              style={{fontSize: "20px", color: "white"}}></i>
+          </Link>
+          <button
+            style={{
+              marginLeft: "30px",
+              cursor: "pointer",
+              backgroundColor: "#9a86f3",
+              padding: "10px",
+              borderRadius: "10px",
+            }}>
+            <i
+              class="fa-solid fa-video"
+              style={{fontSize: "20px", color: "white"}}></i>
+          </button>
+        </div>
+
         <Logout />
       </div>
       <div className="chat-messages">
@@ -94,8 +119,7 @@ useEffect(()=>{
           return (
             <div key={index}>
               <div
-                className={`message ${msg.fromSelf ? "sended" : "recieved"}`}
-              >
+                className={`message ${msg.fromSelf ? "sended" : "recieved"}`}>
                 <div className="content">
                   <p>{msg?.message}</p>
                 </div>

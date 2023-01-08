@@ -30,13 +30,14 @@ const Chat = () => {
       if (currentUser.isAvatarImage) {
         const res = await axios.get(`${friendRoutes}/${currentUser._id}`);
         console.log(`${friendRoutes}/${currentUser._id}`);
-        console.log(res.data, "current user");
-        if (res.data.length > 0) {
-          const friends = res?.data.filter(
-            (friend) => friend.friendsStatus == 3
-          );
 
-          setContacts(friends);
+        if (res.data.length > 0) {
+          // const friends = res?.data.filter(
+          //   (friend) => friend.friendsStatus == 3
+          // );
+          // console.log(friends, "friends");
+
+          setContacts(res.data);
         }
       } else {
         let confirm = window.confirm(
