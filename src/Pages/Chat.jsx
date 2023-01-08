@@ -1,19 +1,19 @@
 import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 import styled from "styled-components";
 import ChatContainer from "../Componets/ChatContainer";
 import Contacts from "../Componets/Contacts";
 import Wellcome from "../Componets/Wellcome";
-import {io} from  'socket.io-client'
+import {io} from "socket.io-client";
 
-import { allUserRoute, friendRoutes, host } from "../utils/ApiRoutes";
-import { useRef } from "react";
+import {allUserRoute, friendRoutes, host} from "../utils/ApiRoutes";
+import {useRef} from "react";
 
 const Chat = () => {
-  const socket = useRef()
+  const socket = useRef();
   const [contacts, setContacts] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
@@ -29,14 +29,15 @@ const Chat = () => {
     if (currentUser) {
       if (currentUser.isAvatarImage) {
         const res = await axios.get(`${friendRoutes}/${currentUser._id}`);
-        console.log(`${friendRoutes}/${currentUser._id}`)
-        console.log(res.data,"current user")
-        if(res.data.length>0){
-          const friends = res?.data.filter(friend=>friend.friendsStatus==3)
-          
-        setContacts(friends)
-        }
+        console.log(`${friendRoutes}/${currentUser._id}`);
+        console.log(res.data, "current user");
+        if (res.data.length > 0) {
+          const friends = res?.data.filter(
+            (friend) => friend.friendsStatus == 3
+          );
 
+          setContacts(friends);
+        }
       } else {
         let confirm = window.confirm(
           "Are You Want Set your  profile picture ?"
@@ -46,16 +47,14 @@ const Chat = () => {
     }
   }
 
-useEffect(()=>{
-  if(currentUser){
-    socket.current = io(host)
-    // console.log(socket.current,"current socket")
-    socket.current.emit('add-user',currentUser._id)
-
-  }
-
-},[currentUser])
-
+  useEffect(() => {
+    if (currentUser) {
+      socket.current = io(host);
+      // console.log(socket.current,"current socket")
+      socket.current.emit("add-user", currentUser._id);
+    }
+  }, [currentUser]);
+  console.log(currentUser, "currentUser");
 
   useEffect(() => {
     allUser();
@@ -77,14 +76,16 @@ useEffect(()=>{
           {!currentChat ? (
             <Wellcome currentUser={currentUser} />
           ) : (
-            <ChatContainer currentChat={currentChat}  currentUser={currentUser} socket={socket} />
+            <ChatContainer
+              currentChat={currentChat}
+              currentUser={currentUser}
+              socket={socket}
+            />
           )}
         </div>
 
         <div className="chat-messages"></div>
-        <div className="chat-input">
-          
-        </div>
+        <div className="chat-input"></div>
       </Container>
     </>
   );

@@ -1,14 +1,16 @@
 import React from "react";
-import { useEffect } from "react";
-import { useState } from "react";
+import {useEffect} from "react";
+import {useState} from "react";
 import styled from "styled-components";
 let logo =
   "https://cdn.dribbble.com/users/573008/screenshots/15453335/media/461c9464866c55c4b0ef892ff8558b0e.png?compress=1&resize=400x300";
 
-const Contacts = ({ contacts, currentUser, changeChat }) => {
+const Contacts = ({contacts, currentUser, changeChat}) => {
   const [currentUserName, setCurrentUserName] = useState(null);
   const [currentUserImage, setCurrentUserImage] = useState(null);
   const [currentSelected, setCurrentSelected] = useState(null);
+
+  // console.log(currentUser, "contacts");
 
   useEffect(() => {
     if (currentUser) {
@@ -33,25 +35,22 @@ const Contacts = ({ contacts, currentUser, changeChat }) => {
           <div className="contacts">
             {contacts.map((contact, index) => {
               return (
-           
-                  <div
-                    key={index}
-                    onClick={() => changeCurrentChat(index, contact)}
-                    className={`contact  ${
-                      index === currentSelected ? "selected" : ""
-                    }`}
-                  >
-                    <div className="avatar">
-                      <img
-                        src={`data:image/svg+xml;base64,${contact.avatarImage}`}
-                        alt=""
-                      />
-                    </div>
-                    <div className="username">
-                      <h3>{contact.username}</h3>
-                    </div>
+                <div
+                  key={index}
+                  onClick={() => changeCurrentChat(index, contact)}
+                  className={`contact  ${
+                    index === currentSelected ? "selected" : ""
+                  }`}>
+                  <div className="avatar">
+                    <img
+                      src={`data:image/svg+xml;base64,${contact.avatarImage}`}
+                      alt=""
+                    />
                   </div>
-               
+                  <div className="username">
+                    <h3>{contact.username}</h3>
+                  </div>
+                </div>
               );
             })}
           </div>
